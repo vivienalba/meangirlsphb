@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#ee327c">
+  <meta name="description" content="Your own Mean Girls-inspired photobooth. Save a three-photo strip or a single-frame video up to 30 seconds, with pink frames, filters and one iconic movie line.">
+  <title>So Fetch! · Mean Girls Photobooth</title>
+  <link rel="icon" href="icon.svg" type="image/svg+xml">
+  <link rel="preload" href="fonts/jost.ttf" as="font" type="font/ttf" crossorigin>
+  <link rel="stylesheet" href="style.css">
+  <script type="module" src="app.js"></script>
+</head>
+<body>
+  <div class="page-shell">
+    <header class="masthead">
+      <a class="brand" href="./" aria-label="So Fetch photobooth home"><canvas id="so-fetch-logo" width="532" height="364" role="img" aria-label="So Fetch">So Fetch</canvas></a>
+      <div class="edition">A MEAN GIRLS PHOTOBOOTH<span>Est. in the cafeteria</span></div>
+    </header>
+
+    <main>
+      <div class="intro">
+        <h1><canvas class="movie-wordmark" id="movie-wordmark" width="1116" height="184" role="img" aria-label="Mean Girls">Mean Girls</canvas><span class="booth-label">PHOTOBOOTH</span></h1>
+        <p>Three poses or a little movie.<br>One iconic line. All yours.</p>
+      </div>
+
+      <div class="booth-layout">
+        <section class="camera-panel" aria-labelledby="camera-heading">
+          <div class="panel-topline">
+            <h2 id="camera-heading"><span>STRIKE A POSE</span></h2>
+            <div class="camera-status" id="camera-status">Camera off</div>
+          </div>
+
+          <fieldset class="mode-controls" id="mode-controls">
+            <legend class="sr-only">Choose photo strip or video</legend>
+            <label><input type="radio" name="booth-mode" value="photo" checked><span>Photo strip</span></label>
+            <label><input type="radio" name="booth-mode" value="video"><span>Video <small>30 sec max</small></span></label>
+          </fieldset>
+
+          <div class="viewfinder" id="viewfinder">
+            <video id="camera" autoplay muted playsinline aria-hidden="true"></video>
+            <canvas id="live-preview" width="720" height="540" role="img" aria-label="Live mirrored camera preview with the Original filter"></canvas>
+            <div class="viewfinder-corners" aria-hidden="true"></div>
+            <div class="camera-empty" id="camera-empty">
+              <svg class="camera-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.35" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3z"/><circle cx="12" cy="13" r="3"/></svg>
+              <h3 id="empty-title">Ready for your close-up?</h3>
+              <p id="empty-description">Enable your camera, grab your besties,<br>and make it a moment.</p>
+              <a id="new-tab" class="new-tab" href="./" target="_blank" rel="noopener" hidden>Open the booth in a new tab ↗</a>
+            </div>
+            <div class="countdown" id="countdown" aria-hidden="true" hidden></div>
+            <div class="shot-prompt" id="shot-prompt" hidden></div>
+            <div class="recording-clock" id="recording-clock" role="timer" aria-label="Recording time" hidden><span aria-hidden="true"></span><output id="recording-time">00:00 / 00:30</output></div>
+            <div class="camera-flash" id="camera-flash" aria-hidden="true"></div>
+            <div class="viewfinder-caption" aria-hidden="true"><span>THE PINK ROOM</span><span id="frame-label">3 × YOU</span></div>
+          </div>
+
+          <fieldset class="filter-controls" id="filter-controls" aria-describedby="filter-description">
+            <legend>CHOOSE YOUR FILTER</legend>
+            <div class="filter-options" id="filter-options"></div>
+            <p id="filter-description">True to you. No filter.</p>
+          </fieldset>
+
+          <div class="capture-controls">
+            <label class="microphone-option" id="microphone-option" hidden><input id="microphone" type="checkbox">Include sound</label>
+            <button class="primary-button" id="capture-button" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="3" y="6" width="18" height="15" rx="2"/><path d="m8 6 2-3h4l2 3"/><circle cx="12" cy="13" r="3"/></svg><span>Enable camera</span></button>
+          </div>
+          <div class="camera-notes"><p id="capture-note">A 3-second countdown before each photo.</p><button id="stop-button" class="text-button" type="button" hidden>Turn camera off</button><button id="cancel-button" class="text-button" type="button" hidden>Cancel</button></div>
+          <p class="privacy-note"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><rect x="5" y="10" width="14" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>Your photos and videos stay on your device.</p>
+        </section>
+
+        <aside class="print-panel" aria-labelledby="print-heading">
+          <div class="panel-topline"><h2 id="print-heading"><span>KEEP THE RECEIPTS</span></h2></div>
+          <div class="strip-stage" id="strip-stage">
+            <canvas id="strip" width="600" height="1800" role="img" aria-label="Your photo strip: three empty photo frames and a space for one movie line.">Your photo strip will contain three photos and one Mean Girls line.</canvas>
+            <canvas id="video-frame" width="720" height="870" role="img" aria-label="Your video: one frame and one movie line." hidden>Your video will contain one frame and one Mean Girls line.</canvas>
+            <video id="video-result" controls playsinline preload="metadata" aria-label="Your recorded Mean Girls video" hidden></video>
+          </div>
+          <div class="strip-caption" id="strip-caption">Your line is a surprise.</div>
+          <div class="print-actions">
+            <button class="download-button" id="download-button" type="button" disabled><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12m-5-5 5 5 5-5M5 16v5h14v-5"/></svg><span id="download-label">Download strip</span></button>
+            <button class="print-button" id="print-button" type="button" disabled><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9V3h12v6M6 18H3V9h18v9h-3M6 14h12v7H6z"/></svg>Print</button>
+          </div>
+          <p class="print-size" id="result-details">2 × 6 in · Three photos · One line</p>
+        </aside>
+      </div>
+      <p class="announcer" id="announcer" role="status" aria-live="polite" aria-atomic="true"></p>
+    </main>
+    <footer><span>PINK LOOKS GOOD ON YOU.</span><a href="https://www.imdb.com/title/tt0377092/quotes/" target="_blank" rel="noopener noreferrer">Inspired by Mean Girls (2004)</a></footer>
+  </div>
+  <div id="print-sheet" aria-hidden="true"><img id="print-image" alt="Three-photo Mean Girls strip"></div>
+</body>
+</html>
